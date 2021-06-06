@@ -33,10 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-    }
-    @Override
-    public void onStart (){
-        super.onStart();
+
         FirebaseUser current_user = mAuth.getCurrentUser();
         if(current_user != null ){
             SignInTransactions();
@@ -44,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             createSignInIntent();
         }
+    }
+    @Override
+    public void onStart (){
+        super.onStart();
+
     }
 
     public void createSignInIntent() {
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                //SignInTransactions();
+                SignInTransactions();
             } else {
                 //sign in failed
             }

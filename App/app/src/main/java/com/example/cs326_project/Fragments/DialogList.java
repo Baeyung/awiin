@@ -151,6 +151,7 @@ public class DialogList extends Fragment {
                 for (QueryDocumentSnapshot doc : value) {
                     if (doc.getData() != null) {
                         Dialog Chats = doc.toObject(Dialog.class);
+                        Chats.setId(doc.getId());
                         dialogsListAdapter.upsertItem(Chats);
                     }
                 }

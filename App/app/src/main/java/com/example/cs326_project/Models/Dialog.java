@@ -48,6 +48,10 @@ public class Dialog implements IDialog, Serializable {
         return dialogPhoto;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String getDialogName() {
         return dialogName;
