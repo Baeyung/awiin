@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -50,6 +53,9 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -135,20 +141,22 @@ public class DialogList extends Fragment {
         });
 
         //dialogsListAdapter.setItems(dfix.getDialogs());
-        firestore.collection("chats").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //start breakpoints
-                                Dialog Chats = document.toObject(Dialog.class);
-                                dialogsListAdapter.addItem(Chats);
-                                //end breakpoints
-                            }
-                        }
+        firestore.collection("chats").addSnapshotListener( new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(getContext(), "failed to fetch results", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                for (QueryDocumentSnapshot doc : value) {
+                    if (doc.getData() != null) {
+                        Dialog Chats = doc.toObject(Dialog.class);
+                        dialogsListAdapter.upsertItem(Chats);
                     }
-                });
+                }
+                Toast.makeText(getContext(), "listening", Toast.LENGTH_SHORT).show();
+            }
+        });
         dialogsListView.setAdapter(dialogsListAdapter);
         //GetDialogList(getView());
 
