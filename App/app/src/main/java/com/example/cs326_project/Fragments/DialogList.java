@@ -133,18 +133,18 @@ public class DialogList extends Fragment {
         });
 
         dialogsListAdapter.setItems(dfix.getDialogs());
-        firestore.collection("chats").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Dialog dialog = document.toObject(Dialog.class);
-                                dialogsListAdapter.addItem(dialog);
-                            }
-                        }
-                    }
-                });
+//        firestore.collection("chats").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Dialog dialog = document.toObject(Dialog.class);
+//                                dialogsListAdapter.addItem(dialog);
+//                            }
+//                        }
+//                    }
+//                });
         dialogsListView.setAdapter(dialogsListAdapter);
         //GetDialogList(getView());
 

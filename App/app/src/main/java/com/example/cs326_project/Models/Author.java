@@ -1,7 +1,11 @@
 package com.example.cs326_project.Models;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Exclude;
 import com.stfalcon.chatkit.commons.models.IUser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Author implements IUser {
 
@@ -31,8 +35,20 @@ public class Author implements IUser {
         return avatar;
     }
 
+    @Exclude
     public static Author author(FirebaseUser firebaseUser){
         Author user = new Author(firebaseUser.getUid(),firebaseUser.getDisplayName(),"");
         return user;
+    }
+
+    public Map<String,Object> hashMap(){
+
+        Map<String,Object> hashMap = new HashMap<>();
+        hashMap.put("id",id);
+        hashMap.put("name",name);
+        hashMap.put("avatar",avatar);
+
+        return  hashMap;
+
     }
 }

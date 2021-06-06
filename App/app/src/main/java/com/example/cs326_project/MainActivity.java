@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.cs326_project.Fragments.DialogList;
 import com.example.cs326_project.Fragments.userProfileFragment;
@@ -68,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                //SignInTransactions();
+                Toast.makeText(this, "signed in", Toast.LENGTH_SHORT).show();
             } else {
                 //sign in failed
+                Toast.makeText(this, "sign in failed, Try again", Toast.LENGTH_SHORT).show();
             }
         }
     }
