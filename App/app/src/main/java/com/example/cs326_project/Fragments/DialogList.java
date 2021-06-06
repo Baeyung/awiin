@@ -133,7 +133,7 @@ public class DialogList extends Fragment {
         });
 
         dialogsListAdapter.setItems(dfix.getDialogs());
-        firestore.collection("chats").get()
+        /*firestore.collection("chats").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -144,7 +144,7 @@ public class DialogList extends Fragment {
                             }
                         }
                     }
-                });
+                });*/
         dialogsListView.setAdapter(dialogsListAdapter);
         //GetDialogList(getView());
 
@@ -191,7 +191,8 @@ public class DialogList extends Fragment {
     }
 
     public void StartNewDialog(String message,View v) {
-        Author user = Author.author(FirebaseAuth.getInstance().getCurrentUser());
+        FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
+        Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://i.imgur.com/DvpvklR.png");
         Message message1 = new Message(message,user,message,new Date());
         user1.add(user);
         Dialog dialog = new Dialog(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"", user1 ,message1,1);
