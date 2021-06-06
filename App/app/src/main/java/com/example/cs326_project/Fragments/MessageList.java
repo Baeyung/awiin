@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,11 @@ import com.example.cs326_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -105,10 +109,31 @@ public class MessageList extends Fragment {
             }
         });
 
-        messagesListAdapter.addToEnd(mParam1.getMessages(),true);
+        messagesListAdapter.addToEnd(mParam1.getMessages(),false);
 
 
         messageListView.setAdapter(messagesListAdapter);
+
+        final DocumentReference docRef = firestore.collection("chats").document(mParam1.getId());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if (snapshot != null && snapshot.exists()) {
+                    if (snapshot.getData() != null) {
+                        Dialog updDialog = snapshot.toObject(Dialog.class);
+                        mParam1.update(updDialog);
+                        messagesListAdapter.clear();
+                        messagesListAdapter.addToEnd(mParam1.getMessages(),false);
+                    }
+                } else {
+
+                }
+            }
+        });
 
         MessageInput inputView = view.findViewById(R.id.input);
 
@@ -126,7 +151,7 @@ public class MessageList extends Fragment {
                 //validate and send message
                 DocumentReference dialogRef = firestore.collection("chats").document(mParam1.getId());
                 FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
-                Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://randomuser.me/api/portraits/men/8.jpg");
+                Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://randomuser.me/api/portraits/men/3.jpg");
                 Message temp = new Message(input.toString(),user,input.toString(), new Date());
                 dialogRef.update("messages", FieldValue.arrayUnion(temp));
                 messagesListAdapter.addToStart(temp, true);

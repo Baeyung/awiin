@@ -52,6 +52,19 @@ public class Dialog implements IDialog, Serializable {
         this.id = id;
     }
 
+    @Exclude
+    public void update(Dialog updatedDialog){
+
+        this.messages=updatedDialog.messages;
+        this.id = updatedDialog.id;
+        this.dialogName = updatedDialog.dialogName;
+        this.dialogPhoto = updatedDialog.dialogPhoto;
+        this.members=updatedDialog.members;
+        this.lastMessage = updatedDialog.lastMessage;
+        this.unreadCount = updatedDialog.unreadCount;
+
+    }
+
     @Override
     public String getDialogName() {
         return dialogName;
