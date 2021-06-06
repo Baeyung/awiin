@@ -8,12 +8,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Message implements IMessage, Serializable {
+public class Message implements IMessage, Serializable{
 
     private String msgText;
     private Author author;
     private String id;
     private Date createdAt;
+
+    public  Message(){
+        //empty constructor
+    }
 
     public Message(String id, Author author, String text, Date createdAt) {
         this.id = id;
@@ -22,34 +26,37 @@ public class Message implements IMessage, Serializable {
         this.createdAt = createdAt;
     }
 
-    
-    @Override
+
     public String getId() {
         return id;
     }
 
-    @Override
+
     public String getText() {
         return msgText;
     }
 
-    @Exclude
+   @Exclude
     public Author getUser() {
         return author;
     }
 
-    @Override
+    public Author getAuthor() { //NOT getUser()
+        return author;
+    }
+
+
     public Date getCreatedAt() {
         return createdAt;
     }
 
+@Exclude
     public Map<String,Object> hashMap(){
 
         Map<String,Object> hashMap = new HashMap<>();
         hashMap.put("msgText",msgText);
         hashMap.put("author",author);
         hashMap.put("createdAt",createdAt);
-
         return  hashMap;
 
     }

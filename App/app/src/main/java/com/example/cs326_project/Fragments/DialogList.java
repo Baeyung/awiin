@@ -27,6 +27,7 @@ import com.example.cs326_project.MainActivity;
 import com.example.cs326_project.Models.DisplayedUserInfo;
 import com.example.cs326_project.Models.Message;
 import com.example.cs326_project.R;
+import com.example.cs326_project.chats;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -132,21 +133,22 @@ public class DialogList extends Fragment {
             }
         });
 
-        dialogsListAdapter.setItems(dfix.getDialogs());
-//        firestore.collection("chats").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Dialog dialog = document.toObject(Dialog.class);
-//                                dialogsListAdapter.addItem(dialog);
-//                            }
-//                        }
-//                    }
-//                });
+        //dialogsListAdapter.setItems(dfix.getDialogs());
+        firestore.collection("chats").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Dialog Chats = document.toObject(Dialog.class);
+                                dialogsListAdapter.addItem(Chats);
+
+                            }
+                        }
+                    }
+                });
         dialogsListView.setAdapter(dialogsListAdapter);
-        //GetDialogList(getView());
+        GetDialogList(getView());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FragmentManager fragmentManager = getChildFragmentManager();
@@ -191,7 +193,8 @@ public class DialogList extends Fragment {
     }
 
     public void StartNewDialog(String message,View v) {
-        Author user = Author.author(FirebaseAuth.getInstance().getCurrentUser());
+        FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
+        Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://i.imgur.com/DvpvklR.png");
         Message message1 = new Message(message,user,message,new Date());
         user1.add(user);
         Dialog dialog = new Dialog(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"", user1 ,message1,1);
@@ -212,6 +215,18 @@ public class DialogList extends Fragment {
 
     private void GetDialogList(View v){
         String s="";
+//        firestore.collection("chats").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Dialog Chats = document.toObject(Dialog.class);
+//
+//                            }
+//                        }
+//                    }
+//                });
 
     }
 
