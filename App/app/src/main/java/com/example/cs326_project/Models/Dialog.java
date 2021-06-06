@@ -7,16 +7,18 @@ import com.google.firebase.firestore.Exclude;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IMessage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Dialog implements IDialog {
+public class Dialog implements IDialog, Serializable {
     private Message lastMessage;
+    private ArrayList<Message>messages;
     private String id;
     private String dialogPhoto;
     private String dialogName;
-    private ArrayList<Author> users;
+    private ArrayList<Author> members;
     private int unreadCount;
 
 
@@ -26,16 +28,13 @@ public class Dialog implements IDialog {
     }
 
     public Dialog(String id, String name, String photo,
-                         ArrayList<Author> users, Message lastMessage, int unreadCount) {
+                         ArrayList<Author> users, Message lastMessage, int unreadCount, ArrayList<Message> messages) {
 
+        this.messages=messages;
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
-        this.users = new ArrayList<Author>();
-        for (int i=0;i< users.size();i++)
-        {
-            this.users.add(users.get(i));
-        }
+        this.members=users;
         this.lastMessage = lastMessage;
         this.unreadCount = unreadCount;
     }
@@ -56,7 +55,15 @@ public class Dialog implements IDialog {
 
     @Exclude
     public ArrayList<Author> getUsers() {
-        return users;
+        return members;
+    }
+
+    public ArrayList<Author> getMembers() {
+        return members;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
     }
 
     @Override
@@ -80,9 +87,11 @@ public class Dialog implements IDialog {
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("lastMessage", lastMessage);
         hashMap.put("id", id);
+        hashMap.put("members",members);
         hashMap.put("dialogName", dialogName);
         hashMap.put("dialogPhoto", dialogPhoto);
         hashMap.put("unreadCount", unreadCount);
+        hashMap.put("messages",messages);
 
         return hashMap;
     }

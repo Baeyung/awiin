@@ -44,7 +44,6 @@ import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 //additional
-import com.example.cs326_project.Misc.dfix;
 import com.stfalcon.chatkit.messages.MessagesList;
 
 import org.w3c.dom.Document;
@@ -117,6 +116,8 @@ public class DialogList extends Fragment {
         DialogsListAdapter dialogsListAdapter = new DialogsListAdapter<>(new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url, Object payload) {
+                if(url==""|| url ==null)
+                    url="https://i.imgur.com/DvpvklR.png";
                 Picasso.get().load(url).into(imageView);
             }
         });
@@ -127,13 +128,13 @@ public class DialogList extends Fragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setReorderingAllowed(true);
-                transaction.add(R.id.fragment_container_view_message, MessageList.newInstance("", ""), "MessageDisp");
+                transaction.add(R.id.fragment_container_view_message, MessageList.newInstance(dialog, ""), "MessageDisp");
                 transaction.addToBackStack("MessageList");
                 transaction.commit();
             }
         });
 
-        dialogsListAdapter.setItems(dfix.getDialogs());
+        //dialogsListAdapter.setItems(dfix.getDialogs());
         firestore.collection("chats").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -197,8 +198,10 @@ public class DialogList extends Fragment {
         FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
         Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://i.imgur.com/DvpvklR.png");
         Message message1 = new Message(message,user,message,new Date());
+        ArrayList<Message> messages = new ArrayList<Message>();
+        messages.add(message1);
         user1.add(user);
-        Dialog dialog = new Dialog(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"", user1 ,message1,1);
+        Dialog dialog = new Dialog(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"", user1 ,message1,1,messages);
 
         firestore.collection("chats").add(dialog.hashMap())
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.cs326_project.Models.Dialog;
 import com.example.cs326_project.Models.Message;
 import com.example.cs326_project.R;
 
@@ -22,7 +23,7 @@ import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 //additional
-import com.example.cs326_project.Misc.dfix;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class MessageList extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private Dialog mParam1;
     private String mParam2;
 
     public MessageList() {
@@ -57,10 +58,10 @@ public class MessageList extends Fragment {
      * @return A new instance of fragment MessageList.
      */
     // TODO: Rename and change types and number of parameters
-    public static MessageList newInstance(String param1, String param2) {
+    public static MessageList newInstance(Dialog param1, String param2) {
         MessageList fragment = new MessageList();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putSerializable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -70,7 +71,7 @@ public class MessageList extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = (Dialog) getArguments().getSerializable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -95,15 +96,7 @@ public class MessageList extends Fragment {
             }
         });
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH,1);
-        calendar.add(Calendar.MINUTE,1);
-
-        List<Message> what = new ArrayList<Message>();;
-
-        what.add(dfix.getMessage(calendar.getTime()));
-
-        messagesListAdapter.addToEnd(what,true);
+        messagesListAdapter.addToEnd(mParam1.getMessages(),true);
 
 
         messageListView.setAdapter(messagesListAdapter);
@@ -114,7 +107,7 @@ public class MessageList extends Fragment {
             @Override
             public void onAddAttachments() {
                 //select attachments
-                messagesListAdapter.addToStart(what.get(0), true);
+                messagesListAdapter.addToStart(mParam1.getLastMessage(), true);
             }
         });
 
@@ -122,7 +115,7 @@ public class MessageList extends Fragment {
             @Override
             public boolean onSubmit(CharSequence input) {
                 //validate and send message
-                messagesListAdapter.addToStart(what.get(0), true);
+                messagesListAdapter.addToStart(mParam1.getLastMessage(), true);
                 return true;
             }
         });
