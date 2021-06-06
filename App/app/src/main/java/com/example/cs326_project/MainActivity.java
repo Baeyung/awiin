@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             createSignInIntent();
         }
+
     }
     @Override
     public void onStart (){
@@ -78,15 +81,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void res ()
+    {
+        Intent starterIntent = getIntent();
+        finish();
+        startActivity(starterIntent);
+
+    }
+
     public void signOut() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         //
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+                        res();
                     }
                 });
     }

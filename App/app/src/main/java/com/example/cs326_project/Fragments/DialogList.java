@@ -39,6 +39,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -65,6 +66,7 @@ import static android.content.ContentValues.TAG;
 public class DialogList extends Fragment {
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    ListenerRegistration registration;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -141,7 +143,7 @@ public class DialogList extends Fragment {
         });
 
         //dialogsListAdapter.setItems(dfix.getDialogs());
-        firestore.collection("chats").addSnapshotListener( new EventListener<QuerySnapshot>() {
+        registration = firestore.collection("chats").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -155,6 +157,7 @@ public class DialogList extends Fragment {
                         dialogsListAdapter.upsertItem(Chats);
                     }
                 }
+
                 Toast.makeText(getContext(), "listening", Toast.LENGTH_SHORT).show();
             }
         });
@@ -178,6 +181,14 @@ public class DialogList extends Fragment {
                 newChatDialog();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        registration.remove();
+
     }
 
     public void newChatDialog(){

@@ -50,6 +50,7 @@ import java.util.List;
 public class MessageList extends Fragment {
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,7 +106,7 @@ public class MessageList extends Fragment {
 
         MessagesList messageListView = view.findViewById(R.id.messagesList);
 
-        MessagesListAdapter messagesListAdapter = new MessagesListAdapter("1",new ImageLoader() {
+        MessagesListAdapter messagesListAdapter = new MessagesListAdapter(current_user.getUid(),new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url, Object payload) {
                 Picasso.get().load(url).into(imageView);
@@ -132,7 +133,7 @@ public class MessageList extends Fragment {
             public boolean onSubmit(CharSequence input) {
                 //validate and send message
                 //DocumentReference dialogRef = firestore.collection("chats").document(mParam1.get);
-                FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
+
                 Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://randomuser.me/api/portraits/men/3.jpg");
                 Message temp = new Message(input.toString(),user,input.toString(), new Date());
                 docRef.update("messages", FieldValue.arrayUnion(temp));
