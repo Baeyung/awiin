@@ -133,7 +133,7 @@ public class DialogList extends Fragment {
             }
         });
 
-        //dialogsListAdapter.setItems(dfix.getDialogs());
+        dialogsListAdapter.setItems(dfix.getDialogs());
         firestore.collection("chats").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -148,7 +148,7 @@ public class DialogList extends Fragment {
                     }
                 });
         dialogsListView.setAdapter(dialogsListAdapter);
-        GetDialogList(getView());
+        //GetDialogList(getView());
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FragmentManager fragmentManager = getChildFragmentManager();

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Message implements IMessage, Serializable{
 
-    private String msgText;
+    private String text;
     private Author author;
     private String id;
     private Date createdAt;
@@ -21,7 +21,7 @@ public class Message implements IMessage, Serializable{
 
     public Message(String id, Author author, String text, Date createdAt) {
         this.id = id;
-        this.msgText = text;
+        this.text = text;
         this.author = author;
         this.createdAt = createdAt;
     }
@@ -33,7 +33,7 @@ public class Message implements IMessage, Serializable{
 
 
     public String getText() {
-        return msgText;
+        return text;
     }
 
    @Exclude
@@ -54,7 +54,7 @@ public class Message implements IMessage, Serializable{
     public Map<String,Object> hashMap(){
 
         Map<String,Object> hashMap = new HashMap<>();
-        hashMap.put("msgText",msgText);
+        hashMap.put("msgText",text);
         hashMap.put("author",author);
         hashMap.put("createdAt",createdAt);
         return  hashMap;
