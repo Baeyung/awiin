@@ -140,9 +140,10 @@ public class DialogList extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                //start breakpoints
                                 Dialog Chats = document.toObject(Dialog.class);
                                 dialogsListAdapter.addItem(Chats);
-
+                                //end breakpoints
                             }
                         }
                     }

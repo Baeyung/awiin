@@ -26,12 +26,12 @@ public class Message implements IMessage, Serializable{
         this.createdAt = createdAt;
     }
 
-
+    @Override
     public String getId() {
         return id;
     }
 
-
+    @Override
     public String getText() {
         return text;
     }
@@ -45,7 +45,7 @@ public class Message implements IMessage, Serializable{
         return author;
     }
 
-
+    @Override
     public Date getCreatedAt() {
         return createdAt;
     }
