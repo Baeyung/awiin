@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.cs326_project.Models.Author;
 import com.example.cs326_project.Models.Dialog;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -99,6 +101,7 @@ public class MessageList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final DocumentReference docRef = firestore.collection("chats").document(mParam1.getFirebase_id());
 
         MessagesList messageListView = view.findViewById(R.id.messagesList);
 
@@ -109,31 +112,10 @@ public class MessageList extends Fragment {
             }
         });
 
-        messagesListAdapter.addToEnd(mParam1.getMessages(),false);
+        messagesListAdapter.addToEnd(mParam1.getMessages(),true);
 
 
         messageListView.setAdapter(messagesListAdapter);
-
-        final DocumentReference docRef = firestore.collection("chats").document(mParam1.getId());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
-                if (snapshot != null && snapshot.exists()) {
-                    if (snapshot.getData() != null) {
-                        Dialog updDialog = snapshot.toObject(Dialog.class);
-                        mParam1.update(updDialog);
-                        messagesListAdapter.clear();
-                        messagesListAdapter.addToEnd(mParam1.getMessages(),false);
-                    }
-                } else {
-
-                }
-            }
-        });
 
         MessageInput inputView = view.findViewById(R.id.input);
 
@@ -149,15 +131,34 @@ public class MessageList extends Fragment {
             @Override
             public boolean onSubmit(CharSequence input) {
                 //validate and send message
-                DocumentReference dialogRef = firestore.collection("chats").document(mParam1.getId());
+                //DocumentReference dialogRef = firestore.collection("chats").document(mParam1.get);
                 FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
                 Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://randomuser.me/api/portraits/men/3.jpg");
                 Message temp = new Message(input.toString(),user,input.toString(), new Date());
-                dialogRef.update("messages", FieldValue.arrayUnion(temp));
+                docRef.update("messages", FieldValue.arrayUnion(temp));
                 messagesListAdapter.addToStart(temp, true);
                 return true;
             }
         });
 
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if (snapshot != null && snapshot.exists()) {
+                    if (snapshot.getData() != null) {
+                        Dialog updDialog = snapshot.toObject(Dialog.class);
+                        mParam1.update(updDialog,snapshot.getId());
+                        messagesListAdapter.clear();
+                        messagesListAdapter.addToEnd(mParam1.getMessages(),true);
+                    }
+                } else {
+
+                }
+            }
+        });
     }
 }

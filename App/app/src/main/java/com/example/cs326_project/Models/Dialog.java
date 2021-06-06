@@ -20,7 +20,7 @@ public class Dialog implements IDialog, Serializable {
     private String dialogName;
     private ArrayList<Author> members;
     private int unreadCount;
-
+    private String firebase_id;
 
     /*...*/
     public Dialog(){
@@ -48,12 +48,18 @@ public class Dialog implements IDialog, Serializable {
         return dialogPhoto;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Exclude
+    public void setFirebase_id(String firebase_id) {
+        this.firebase_id = firebase_id;
     }
 
     @Exclude
-    public void update(Dialog updatedDialog){
+    public String getFirebase_id() {
+        return firebase_id;
+    }
+
+    @Exclude
+    public void update(Dialog updatedDialog, String firebase_id ){
 
         this.messages=updatedDialog.messages;
         this.id = updatedDialog.id;
@@ -62,6 +68,7 @@ public class Dialog implements IDialog, Serializable {
         this.members=updatedDialog.members;
         this.lastMessage = updatedDialog.lastMessage;
         this.unreadCount = updatedDialog.unreadCount;
+        this.firebase_id=firebase_id;
 
     }
 
