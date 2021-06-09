@@ -101,13 +101,18 @@ public class userProfileFragment extends Fragment {
         builder1.setTitle("Sign Out?");
         builder1.setMessage("We will miss You");
         builder1.setCancelable(true);
-        builder1.setNeutralButton("OK",
+        builder1.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainActivity parentFrag = ((MainActivity)userProfileFragment.this.getActivity());
                         parentFrag.signOut();
                     }
                 });
+        builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
 
         AlertDialog alert11 = builder1.create();
         alert11.show();

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Message implements IMessage, Serializable{
+public class Message implements IMessage, Serializable, Comparable<Message>{
 
     private String text;
     private Author author;
@@ -17,6 +17,11 @@ public class Message implements IMessage, Serializable{
 
     public  Message(){
         //empty constructor
+    }
+
+    @Exclude
+    public int compareTo(Message o) {
+        return this.createdAt.compareTo(o.getCreatedAt());
     }
 
     public Message(String id, Author author, String text, Date createdAt) {
@@ -54,7 +59,7 @@ public class Message implements IMessage, Serializable{
     public Map<String,Object> hashMap(){
 
         Map<String,Object> hashMap = new HashMap<>();
-        hashMap.put("msgText",text);
+        hashMap.put("text",text);
         hashMap.put("author",author);
         hashMap.put("createdAt",createdAt);
         return  hashMap;

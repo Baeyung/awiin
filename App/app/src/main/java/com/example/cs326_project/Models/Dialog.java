@@ -9,34 +9,43 @@ import com.stfalcon.chatkit.commons.models.IMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Dialog implements IDialog, Serializable {
+public class Dialog implements IDialog, Serializable, Comparable<Dialog> {
     private Message lastMessage;
-    private ArrayList<Message>messages;
     private String id;
+    private String OwnerId;
     private String dialogPhoto;
     private String dialogName;
     private ArrayList<Author> members;
     private int unreadCount;
     private String firebase_id;
+    private int total_messages;
 
     /*...*/
     public Dialog(){
 
     }
 
-    public Dialog(String id, String name, String photo,
-                         ArrayList<Author> users, Message lastMessage, int unreadCount, ArrayList<Message> messages) {
+    @Exclude
+    public int compareTo(Dialog o) {
+        return lastMessage.getCreatedAt().compareTo(o.lastMessage.getCreatedAt());
+    }
 
-        this.messages=messages;
+    public Dialog(String id, String name, String photo,
+                         ArrayList<Author> users, Message lastMessage, int unreadCount, String Owner, int total_messages) {
+
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
         this.members=users;
         this.lastMessage = lastMessage;
         this.unreadCount = unreadCount;
+        this.OwnerId=Owner;
+        this.total_messages=total_messages;
+
     }
 
     @Override
@@ -46,6 +55,14 @@ public class Dialog implements IDialog, Serializable {
     @Override
     public String getDialogPhoto() {
         return dialogPhoto;
+    }
+
+    public String getOwnerId() {
+        return OwnerId;
+    }
+
+    public int getTotal_messages() {
+        return total_messages;
     }
 
     @Exclude
@@ -61,7 +78,6 @@ public class Dialog implements IDialog, Serializable {
     @Exclude
     public void update(Dialog updatedDialog, String firebase_id ){
 
-        this.messages=updatedDialog.messages;
         this.id = updatedDialog.id;
         this.dialogName = updatedDialog.dialogName;
         this.dialogPhoto = updatedDialog.dialogPhoto;
@@ -69,7 +85,12 @@ public class Dialog implements IDialog, Serializable {
         this.lastMessage = updatedDialog.lastMessage;
         this.unreadCount = updatedDialog.unreadCount;
         this.firebase_id=firebase_id;
+        this.OwnerId=updatedDialog.OwnerId;
+        this.total_messages=updatedDialog.total_messages;
+    }
 
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
     }
 
     @Override
@@ -84,10 +105,6 @@ public class Dialog implements IDialog, Serializable {
 
     public ArrayList<Author> getMembers() {
         return members;
-    }
-
-    public ArrayList<Message> getMessages() {
-        return messages;
     }
 
     @Override
@@ -115,8 +132,8 @@ public class Dialog implements IDialog, Serializable {
         hashMap.put("dialogName", dialogName);
         hashMap.put("dialogPhoto", dialogPhoto);
         hashMap.put("unreadCount", unreadCount);
-        hashMap.put("messages",messages);
-
+        hashMap.put("total_messages",total_messages);
+        hashMap.put("OwnerId", OwnerId);
         return hashMap;
     }
 }
