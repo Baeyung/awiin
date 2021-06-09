@@ -190,7 +190,7 @@ public class MessageList extends Fragment {
                 //validate and send message
                 //DocumentReference dialogRef = firestore.collection("chats").document(mParam1.get);
 
-                Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://ui-avatars.com/api/?name="+current_user.getDisplayName());
+                Author user = new Author(current_user.getUid(),current_user.getDisplayName(),"https://randomuser.me/api/portraits/men/3.jpg");
                 Message temp = new Message(input.toString(),user,input.toString(), new Date());
                 FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/notify","New Message",input.toString(),getContext(),getActivity());
                 fcmNotificationsSender.SendNotifications();
